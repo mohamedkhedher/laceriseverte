@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-cormorant);
+  
+  /* Brand Colors */
+  --color-sage: #8fa08c;
+  --color-olive: #4a5d4e;
+  --color-forest: #3c4a3e;
+  --color-cream: #faf9f6;
+  --color-beige: #f2eae0;
+  
+  --color-background: var(--color-cream);
+  --color-foreground: var(--color-olive);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    @apply font-sans antialiased selection:bg-sage/30 selection:text-forest;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-normal;
+  }
+}
+
+/* Custom Utilities for Animations and Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+.bg-blur {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
