@@ -49,7 +49,7 @@ export function ProductHero({ lang }: ProductHeroProps) {
                     className="order-1 lg:order-2 relative aspect-[3/4] w-full max-w-sm mx-auto flex items-center justify-center p-8"
                 >
                     <Image
-                        src="/product.png"
+                        src="/zhar.jpeg"
                         alt="Eau de fleur d'oranger Product"
                         fill
                         className="object-contain drop-shadow-2xl"
