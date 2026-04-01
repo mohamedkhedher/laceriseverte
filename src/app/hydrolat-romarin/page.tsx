@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowLeft, Download, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import PdfViewerWrapper from './PdfViewerWrapper';
 
 export const metadata: Metadata = {
   title: 'Hydrolat Romarin | La Cerise Verte',
@@ -50,41 +51,7 @@ export default function HydrolatRomarinPage() {
 
         {/* PDF Viewer Container */}
         <div className="flex-1 w-full bg-white rounded-xl sm:rounded-2xl shadow-sm border border-stone-200 overflow-hidden relative flex flex-col">
-          
-          {/* Mobile Overlay Fallback - Visible mainly if iframe fails, but also gives a clear call to action on very small screens */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-50 p-6 z-0">
-            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
-              <ExternalLink className="w-8 h-8 text-emerald-800" />
-            </div>
-            <p className="text-stone-600 text-center mb-6 max-w-md">
-              Pour une meilleure expérience de lecture sur mobile, nous vous recommandons d'ouvrir le document en plein écran ou de le télécharger.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <a 
-                href="/postalcard.pdf" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-6 py-3 bg-emerald-800 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-sm w-full sm:w-auto"
-              >
-                Ouvrir le PDF
-              </a>
-            </div>
-          </div>
-
-          {/* We use an object to display the PDF natively. z-10 puts it over the fallback if it loads successfully */}
-          <object 
-            data="/postalcard.pdf#toolbar=0&view=FitH" 
-            type="application/pdf"
-            className="w-full h-full relative z-10"
-            style={{ minHeight: '100%' }}
-          >
-            {/* If object fails (e.g., iPhone Safari block), it falls back to the content underneath inherently, but we also put an iframe just in case. */}
-            <iframe 
-              src="/postalcard.pdf#toolbar=0&view=FitH" 
-              className="w-full h-full border-0 absolute inset-0 z-10"
-              title="Hydrolat Romarin PDF Document"
-            />
-          </object>
+          <PdfViewerWrapper file="/postalcard.pdf" />
         </div>
       </div>
     </main>
