@@ -12,6 +12,7 @@ interface PdfViewerProps {
 
 export default function PdfViewer({ file }: PdfViewerProps) {
   const [containerWidth, setContainerWidth] = useState<number>(0);
+  const [numPages, setNumPages] = useState<number>();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,11 +34,16 @@ export default function PdfViewer({ file }: PdfViewerProps) {
     };
   }, []);
 
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setNumPages(numPages);
+  }
+
   return (
-    <div ref={containerRef} className="w-full h-full flex justify-center items-start overflow-auto bg-stone-100/50">
+    <div ref={containerRef} className="w-full h-full flex justify-center items-start overflow-auto bg-stone-100/50 py-4">
       <Document
         file={file}
-        className="flex flex-col items-center w-full"
+        onLoadSuccess={onDocumentLoadSuccess}
+        className="flex flex-col items-center w-full gap-4"
         loading={
           <div className="flex items-center justify-center p-12 text-stone-500 font-medium">
             Chargement du document...
@@ -50,13 +56,16 @@ export default function PdfViewer({ file }: PdfViewerProps) {
           </div>
         }
       >
-        <Page 
-          pageNumber={1} 
-          width={containerWidth ? containerWidth : undefined}
-          renderTextLayer={false} 
-          renderAnnotationLayer={false}
-          className="shadow-sm border border-stone-200"
-        />
+        {Array.from(new Array(numPages || 1), (el, index) => (
+          <Page 
+            key={`page_${index + 1}`}
+            pageNumber={index + 1} 
+            width={containerWidth ? containerWidth : undefined}
+            renderTextLayer={false} 
+            renderAnnotationLayer={false}
+            className="shadow-sm border border-stone-200"
+          />
+        ))}
       </Document>
     </div>
   );
