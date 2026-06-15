@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Language, productContent } from "@/data/productContent";
+import { Language, ProductData } from "@/data/productContent";
 
-export function ProductSpecs({ lang }: { lang: Language }) {
-    const content = productContent[lang].specs;
+export function ProductSpecs({ lang, product }: { lang: Language; product: ProductData }) {
+    const content = product.content[lang].specs;
     const isRtl = lang === "ar";
 
     return (
@@ -17,7 +17,7 @@ export function ProductSpecs({ lang }: { lang: Language }) {
                     transition={{ duration: 0.8 }}
                     className="mb-16"
                 >
-                    <h2 className="text-3xl font-serif text-forest mb-4">{content.title}</h2>
+                    <h2 className="text-3xl font-subtitle text-forest mb-4">{content.title}</h2>
                     <div className="w-16 h-[1px] bg-sage"></div>
                 </motion.div>
 

@@ -1,17 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Cormorant_Garamond } from "next/font/google";
+import { Cinzel_Decorative, Cinzel, Poppins } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const cinzelDecorative = Cinzel_Decorative({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["400", "700", "900"],
+  variable: "--font-title",
   display: "swap",
 });
 
-const cormorant = Cormorant_Garamond({
+const cinzel = Cinzel({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-cormorant",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-subtitle",
+  display: "swap",
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-body",
   display: "swap",
 });
 
@@ -20,8 +28,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "La Cerise Verte | Produits naturels & cosmétiques bio — Bientôt en ligne",
-  description: "La Cerise Verte prépare son univers de produits naturels, cosmétiques bio et eaux florales inspirés par la pureté botanique.",
+  title: "La Cerise Verte | Produits naturels & cosmétiques bio",
+  description: "La Cerise Verte — produits naturels, cosmétiques bio et eaux florales inspirés par la pureté botanique. Découvrez nos hydrolats d'exception.",
 };
 
 export default function RootLayout({
@@ -30,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${inter.variable} ${cormorant.variable}`}>
+    <html lang="fr" className={`${cinzelDecorative.variable} ${cinzel.variable} ${poppins.variable}`}>
       <body className="antialiased font-sans bg-cream text-olive selection:bg-sage/30">
         {children}
       </body>

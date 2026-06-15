@@ -1,15 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Language, productContent } from "@/data/productContent";
+import { Language, ProductData } from "@/data/productContent";
 import { Sparkles, Moon, Leaf } from "lucide-react";
 
 interface BenefitsGridProps {
     lang: Language;
+    product: ProductData;
 }
 
-export function BenefitsGrid({ lang }: BenefitsGridProps) {
-    const content = productContent[lang].benefits;
+export function BenefitsGrid({ lang, product }: BenefitsGridProps) {
+    const content = product.content[lang].benefits;
     const isRtl = lang === "ar";
 
     const icons = [
@@ -28,7 +29,7 @@ export function BenefitsGrid({ lang }: BenefitsGridProps) {
                     transition={{ duration: 0.8 }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-3xl md:text-4xl font-serif text-forest mb-6">{content.title}</h2>
+                    <h2 className="text-3xl md:text-4xl font-subtitle text-forest mb-6">{content.title}</h2>
                     <div className="w-16 h-[1px] bg-sage mx-auto"></div>
                 </motion.div>
 
@@ -49,7 +50,7 @@ export function BenefitsGrid({ lang }: BenefitsGridProps) {
                                 {icons[index]}
                             </div>
 
-                            <h3 className="text-xl font-serif text-forest mb-6">{category.title}</h3>
+                            <h3 className="text-xl font-subtitle text-forest mb-6">{category.title}</h3>
 
                             <ul className="space-y-4">
                                 {category.bullets.map((bullet, idx) => (

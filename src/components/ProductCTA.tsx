@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Language, productContent } from "@/data/productContent";
+import { Language, ProductData } from "@/data/productContent";
 
-export function ProductCTA({ lang }: { lang: Language }) {
-    const content = productContent[lang].cta;
+export function ProductCTA({ lang, product }: { lang: Language; product: ProductData }) {
+    const content = product.content[lang].cta;
     const isRtl = lang === "ar";
 
     return (
@@ -24,7 +24,7 @@ export function ProductCTA({ lang }: { lang: Language }) {
                     transition={{ duration: 0.8 }}
                 >
                     <span className="text-sage/80 font-medium tracking-[0.2em] uppercase text-xs mb-6 block">La Cerise Verte</span>
-                    <h2 className="text-4xl md:text-5xl font-serif mb-8">{content.heading}</h2>
+                    <h2 className="text-4xl md:text-5xl font-subtitle mb-8">{content.heading}</h2>
                     <p className="text-cream/80 font-light mb-12 text-lg">
                         {content.text}
                     </p>

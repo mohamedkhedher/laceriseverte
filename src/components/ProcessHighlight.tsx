@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Language, productContent } from "@/data/productContent";
+import { Language, ProductData } from "@/data/productContent";
 import { Droplets } from "lucide-react";
 
-export function ProcessHighlight({ lang }: { lang: Language }) {
-    const content = productContent[lang].process;
+export function ProcessHighlight({ lang, product }: { lang: Language; product: ProductData }) {
+    const content = product.content[lang].process;
     const isRtl = lang === "ar";
 
     return (
@@ -25,9 +25,9 @@ export function ProcessHighlight({ lang }: { lang: Language }) {
                     <div className="relative w-64 h-64 rounded-full border border-forest/10 flex items-center justify-center before:absolute before:inset-0 before:border before:border-sage/30 before:rounded-full before:scale-110 before:animate-[ping_4s_ease-out_infinite]">
                         <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-cream to-beige shadow-inner flex flex-col items-center justify-center p-6 text-center">
                             <Droplets className="w-10 h-10 text-sage mb-4 stroke-[1.5]" />
-                            <p className="font-serif text-forest text-2xl">1 kg</p>
+                            <p className="font-subtitle text-forest text-2xl">1 kg</p>
                             <div className="w-8 h-[1px] bg-olive/20 my-2"></div>
-                            <p className="font-serif text-sage text-2xl">1 L</p>
+                            <p className="font-subtitle text-sage text-2xl">1 L</p>
                         </div>
 
                         {/* Minimalist floating particles simulating steam/water drops */}
@@ -62,10 +62,10 @@ export function ProcessHighlight({ lang }: { lang: Language }) {
                     transition={{ duration: 0.8 }}
                     className="w-full md:w-1/2 order-1 md:order-2"
                 >
-                    <h2 className="text-3xl lg:text-4xl font-serif text-forest mb-6">{content.title}</h2>
+                    <h2 className="text-3xl lg:text-4xl font-subtitle text-forest mb-6">{content.title}</h2>
                     <div className={`w-12 h-[1px] bg-sage mb-8 ${isRtl ? "ml-auto" : ""}`}></div>
                     <p className="text-xl lg:text-2xl font-light text-olive leading-relaxed tracking-wide">
-                        "{content.text}"
+                        &quot;{content.text}&quot;
                     </p>
                 </motion.div>
             </div>

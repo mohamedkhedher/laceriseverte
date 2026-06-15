@@ -1,0 +1,168 @@
+import { NextRequest, NextResponse } from "next/server";
+import nodemailer from "nodemailer";
+
+interface OrderItem {
+    productName: string;
+    volume: string;
+    price: number;
+    quantity: number;
+}
+
+interface OrderData {
+    customer: {
+        name: string;
+        phone: string;
+        address: string;
+        city: string;
+        postalCode?: string;
+        notes?: string;
+    };
+    items: OrderItem[];
+    total: number;
+}
+
+export async function POST(request: NextRequest) {
+    try {
+        const body: OrderData = await request.json();
+
+        // Validate required fields
+        if (!body.customer?.name || !body.customer?.phone || !body.customer?.address || !body.customer?.city) {
+            return NextResponse.json(
+                { error: "Veuillez remplir tous les champs obligatoires." },
+                { status: 400 }
+            );
+        }
+
+        if (!body.items || body.items.length === 0) {
+            return NextResponse.json(
+                { error: "Votre panier est vide." },
+                { status: 400 }
+            );
+        }
+
+        // Build email HTML
+        const itemsHtml = body.items
+            .map(
+                (item) => `
+                <tr>
+                    <td style="padding: 12px; border-bottom: 1px solid #f2eae0;">${item.productName}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #f2eae0;">${item.volume}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #f2eae0; text-align: center;">${item.quantity}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #f2eae0; text-align: right;">${item.price.toFixed(3)} TND</td>
+                </tr>`
+            )
+            .join("");
+
+        const emailHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <style>
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #faf9f6; color: #4a5d4e; margin: 0; padding: 0; }
+                .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+                .header { background: #3c4a3e; color: #faf9f6; padding: 30px; text-align: center; }
+                .header h1 { margin: 0; font-size: 24px; letter-spacing: 2px; }
+                .header p { margin: 8px 0 0; opacity: 0.8; font-size: 14px; }
+                .content { padding: 30px; }
+                .section-title { color: #3c4a3e; font-size: 18px; margin: 24px 0 12px; border-bottom: 2px solid #8fa08c; padding-bottom: 8px; }
+                .info-row { display: flex; padding: 8px 0; border-bottom: 1px solid #f2eae0; }
+                .info-label { font-weight: 600; color: #3c4a3e; min-width: 140px; }
+                .info-value { color: #4a5d4e; }
+                table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+                th { background: #f2eae0; padding: 12px; text-align: left; color: #3c4a3e; font-weight: 600; }
+                .total-row { background: #3c4a3e; color: #faf9f6; }
+                .total-row td { padding: 16px 12px; font-weight: 700; font-size: 18px; }
+                .badge { display: inline-block; background: #8fa08c; color: white; padding: 6px 16px; border-radius: 20px; font-size: 13px; margin-top: 16px; }
+                .footer { text-align: center; padding: 20px; color: #8fa08c; font-size: 12px; border-top: 1px solid #f2eae0; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>La Cerise Verte</h1>
+                    <p>Nouvelle commande reçue</p>
+                </div>
+                <div class="content">
+                    <h2 class="section-title">📦 Informations client</h2>
+                    <div style="margin-bottom: 20px;">
+                        <div class="info-row"><span class="info-label">Nom :</span><span class="info-value">${body.customer.name}</span></div>
+                        <div class="info-row"><span class="info-label">Téléphone :</span><span class="info-value">${body.customer.phone}</span></div>
+                        <div class="info-row"><span class="info-label">Adresse :</span><span class="info-value">${body.customer.address}</span></div>
+                        <div class="info-row"><span class="info-label">Ville :</span><span class="info-value">${body.customer.city}</span></div>
+                        ${body.customer.postalCode ? `<div class="info-row"><span class="info-label">Code postal :</span><span class="info-value">${body.customer.postalCode}</span></div>` : ""}
+                        ${body.customer.notes ? `<div class="info-row"><span class="info-label">Notes :</span><span class="info-value">${body.customer.notes}</span></div>` : ""}
+                    </div>
+
+                    <h2 class="section-title">🛒 Détails de la commande</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th>Format</th>
+                                <th style="text-align: center;">Qté</th>
+                                <th style="text-align: right;">Prix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHtml}
+                            <tr class="total-row">
+                                <td colspan="3">Total</td>
+                                <td style="text-align: right;">${body.total.toFixed(3)} TND</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <span class="badge">💰 Paiement à la livraison</span>
+                </div>
+                <div class="footer">
+                    <p>© ${new Date().getFullYear()} La Cerise Verte — Commande automatique</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        `;
+
+        // Send email
+        const orderEmail = process.env.ORDER_EMAIL || "contact@laceriseverte.com";
+
+        // Create transporter — configure via environment variables
+        const transporter = nodemailer.createTransport({
+            host: process.env.SMTP_HOST || "smtp.gmail.com",
+            port: parseInt(process.env.SMTP_PORT || "587"),
+            secure: process.env.SMTP_SECURE === "true",
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
+            },
+        });
+
+        // Only send email if SMTP credentials are configured
+        if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+            await transporter.sendMail({
+                from: `"La Cerise Verte" <${process.env.SMTP_USER}>`,
+                to: orderEmail,
+                subject: `🌿 Nouvelle commande — ${body.customer.name} — ${body.total.toFixed(3)} TND`,
+                html: emailHtml,
+            });
+        } else {
+            // Log order to console when SMTP is not configured (development)
+            console.log("=== NEW ORDER (SMTP not configured) ===");
+            console.log("Customer:", body.customer);
+            console.log("Items:", body.items);
+            console.log("Total:", body.total.toFixed(3), "TND");
+            console.log("========================================");
+        }
+
+        return NextResponse.json({
+            success: true,
+            message: "Commande confirmée ! Vous recevrez votre commande prochainement.",
+        });
+    } catch (error) {
+        console.error("Checkout error:", error);
+        return NextResponse.json(
+            { error: "Une erreur est survenue. Veuillez réessayer." },
+            { status: 500 }
+        );
+    }
+}

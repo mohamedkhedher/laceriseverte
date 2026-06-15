@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-body);
+  --font-title: var(--font-title);
+  --font-subtitle: var(--font-subtitle);
   
   /* Brand Colors */
   --color-sage: #8fa08c;
@@ -10,6 +11,8 @@
   --color-forest: #3c4a3e;
   --color-cream: #faf9f6;
   --color-beige: #f2eae0;
+  --color-gold: #c9a96e;
+  --color-rose: #d4a5a5;
   
   --color-background: var(--color-cream);
   --color-foreground: var(--color-olive);
@@ -22,8 +25,19 @@
     @apply font-sans antialiased selection:bg-sage/30 selection:text-forest;
   }
   
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-serif font-normal;
+  h1 {
+    font-family: var(--font-title);
+    @apply font-normal;
+  }
+  
+  h2, h3 {
+    font-family: var(--font-subtitle);
+    @apply font-normal;
+  }
+  
+  h4, h5, h6 {
+    font-family: var(--font-subtitle);
+    @apply font-normal;
   }
 }
 
@@ -35,4 +49,31 @@ html {
 .bg-blur {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+}
+
+/* Font utility classes for explicit use */
+.font-title {
+  font-family: var(--font-title);
+}
+
+.font-subtitle {
+  font-family: var(--font-subtitle);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-sage);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-olive);
 }

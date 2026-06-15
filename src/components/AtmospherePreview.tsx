@@ -20,10 +20,10 @@ export function AtmospherePreview() {
                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,_rgba(255,255,255,0.8)_0%,_transparent_60%)]"></div>
 
                             {/* Placeholder text indicating the visual mood */}
-                            <div className="absolute inset-0flex items-center justify-center flex-col text-forest/20 p-8 text-center font-serif text-xl border border-white/20 m-4 rounded-xl backdrop-blur-sm bg-white/5">
+                            <div className="absolute inset-0 flex items-center justify-center flex-col text-forest/20 p-8 text-center text-xl border border-white/20 m-4 rounded-xl backdrop-blur-sm bg-white/5">
                                 <div className="absolute inset-0 flex items-center justify-center flex-col h-full">
-                                    <span className="italic">Visual Atmosphere</span>
-                                    <span className="text-sm font-sans mt-2">Orange blossoms & amber glass</span>
+                                    <span className="italic font-subtitle">Visual Atmosphere</span>
+                                    <span className="text-sm font-sans mt-2">Orange blossoms &amp; amber glass</span>
                                 </div>
                             </div>
                         </motion.div>
@@ -37,9 +37,9 @@ export function AtmospherePreview() {
                         transition={{ duration: 0.8 }}
                         className="flex flex-col justify-center"
                     >
-                        <h2 className="text-3xl md:text-4xl font-serif text-forest mb-6">De la fleur au flacon</h2>
+                        <h2 className="text-3xl md:text-4xl font-subtitle text-forest mb-6">De la fleur au flacon</h2>
                         <p className="text-lg text-olive/80 font-light mb-8 leading-relaxed">
-                            Nous sélectionnons avec soin les meilleurs ingrédients botaniques pour créer des extraits d'une pureté incomparable. Notre eau de fleur d'oranger incarne cet engagement vers une beauté authentique et saine.
+                            Nous sélectionnons avec soin les meilleurs ingrédients botaniques pour créer des extraits d&apos;une pureté incomparable. Nos eaux florales incarnent cet engagement vers une beauté authentique et saine.
                         </p>
                         <div className="flex items-center gap-4 text-sm font-medium text-sage uppercase tracking-widest">
                             <span className="w-12 h-[1px] bg-sage"></span>

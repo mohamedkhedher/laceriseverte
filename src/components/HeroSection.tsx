@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 
 export function HeroSection() {
@@ -38,9 +37,9 @@ export function HeroSection() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.5 }}
-                    className="text-5xl md:text-7xl font-serif text-forest mb-6 leading-tight"
+                    className="text-5xl md:text-7xl font-title text-forest mb-6 leading-tight"
                 >
-                    La nature arrive bientôt.
+                    La nature, sublimée.
                 </motion.h1>
 
                 <motion.p
@@ -49,10 +48,28 @@ export function HeroSection() {
                     transition={{ duration: 1, delay: 0.7 }}
                     className="text-lg md:text-xl text-olive/80 max-w-xl font-light mb-12"
                 >
-                    Une nouvelle maison de soins naturels et de produits bio inspirés par la pureté botanique.
+                    Eaux florales d'exception, cosmétiques naturels et produits bio inspirés par la pureté botanique méditerranéenne.
                 </motion.p>
 
-
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.9 }}
+                    className="flex flex-col sm:flex-row gap-4"
+                >
+                    <Link
+                        href="/produits-alimentaires"
+                        className="inline-flex items-center justify-center px-8 py-4 bg-forest text-cream rounded-full hover:bg-olive transition-colors duration-300 font-medium tracking-wide shadow-lg hover:shadow-xl"
+                    >
+                        Découvrir nos produits
+                    </Link>
+                    <Link
+                        href="/histoire"
+                        className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-forest border border-forest/20 rounded-full hover:bg-forest/5 transition-colors duration-300 font-medium tracking-wide"
+                    >
+                        Notre histoire
+                    </Link>
+                </motion.div>
             </motion.div>
         </section>
     );

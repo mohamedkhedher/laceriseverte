@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Send } from "lucide-react";
 
 export function NewsletterForm() {
     const [email, setEmail] = useState("");
@@ -29,9 +28,9 @@ export function NewsletterForm() {
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8 }}
                 >
-                    <h2 className="text-3xl font-serif text-forest mb-4">Rejoignez l'univers</h2>
+                    <h2 className="text-3xl font-subtitle text-forest mb-4">Rejoignez l&apos;univers</h2>
                     <p className="text-olive/80 font-light mb-10">
-                        Inscrivez-vous pour être informé(e) de notre lancement officiel et découvrir nos rituels en avant-première.
+                        Inscrivez-vous pour découvrir nos nouveautés et profiter d&apos;offres exclusives en avant-première.
                     </p>
 
                     <form onSubmit={handleSubmit} className="relative flex items-center justify-center max-w-md mx-auto">
@@ -60,7 +59,7 @@ export function NewsletterForm() {
                     </form>
 
                     <p className="text-xs text-olive/50 mt-4">
-                        Nous respectons votre vie privée. Pas de spams, uniquement l'essentiel.
+                        Nous respectons votre vie privée. Pas de spams, uniquement l&apos;essentiel.
                     </p>
                 </motion.div>
             </div>

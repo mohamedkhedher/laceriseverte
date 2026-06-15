@@ -32,7 +32,7 @@ export function BrandEssence() {
                     transition={{ duration: 0.8 }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-3xl md:text-4xl font-serif text-forest mb-4">L'essence de La Cerise Verte</h2>
+                    <h2 className="text-3xl md:text-4xl font-subtitle text-forest mb-4">L&apos;essence de La Cerise Verte</h2>
                     <div className="w-12 h-[1px] bg-sage mx-auto"></div>
                 </motion.div>
 
@@ -49,7 +49,7 @@ export function BrandEssence() {
                             <div className="w-16 h-16 rounded-full bg-beige flex items-center justify-center text-sage mb-6 group-hover:scale-110 group-hover:bg-sage group-hover:text-cream transition-all duration-500">
                                 {item.icon}
                             </div>
-                            <h3 className="text-xl font-serif text-forest mb-3">{item.title}</h3>
+                            <h3 className="text-xl font-subtitle text-forest mb-3">{item.title}</h3>
                             <p className="text-olive/80 font-light leading-relaxed">
                                 {item.description}
                             </p>
