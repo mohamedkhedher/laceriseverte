@@ -16,7 +16,7 @@ export function LanguageSwitcher({ currentLang, onLanguageChange }: LanguageSwit
     ];
 
     return (
-        <div className="fixed top-6 right-6 z-50 bg-cream/80 backdrop-blur-md rounded-full p-1 border border-forest/10 shadow-sm flex items-center gap-1">
+        <div className="bg-cream/80 backdrop-blur-md rounded-full p-1 border border-forest/10 shadow-sm inline-flex items-center gap-1">
             {languages.map((lang) => {
                 const isActive = currentLang === lang.code;
                 return (

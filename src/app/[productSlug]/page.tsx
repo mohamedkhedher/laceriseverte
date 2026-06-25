@@ -47,26 +47,10 @@ function ProductPageContent() {
     return (
         <main className={`min-h-screen bg-cream selection:bg-sage/30 ${lang === "ar" ? "font-subtitle" : "font-sans"}`}>
             <Navbar />
-            <LanguageSwitcher currentLang={lang} onLanguageChange={setLang} />
-
-            {/* Full-width banner image */}
-            <section className="relative w-full h-[40vh] md:h-[50vh] lg:h-[60vh] overflow-hidden">
-                <div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${product.bannerImage})` }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-forest/40 via-forest/20 to-cream" />
-                <div className="absolute inset-0 flex items-end justify-center pb-12">
-                    <div className="text-center">
-                        <h1 className="font-title text-4xl md:text-5xl lg:text-6xl text-cream drop-shadow-lg">
-                            {content.hero.title}
-                        </h1>
-                        <p className="font-subtitle text-lg md:text-xl text-cream/90 mt-3 italic drop-shadow">
-                            {content.hero.subtitle}
-                        </p>
-                    </div>
-                </div>
-            </section>
+            
+            <div className="pt-24 md:pt-28 px-6 max-w-6xl mx-auto flex justify-center sm:justify-end relative z-20">
+                <LanguageSwitcher currentLang={lang} onLanguageChange={setLang} />
+            </div>
 
             <ProductHero lang={lang} product={product} />
 

@@ -14,7 +14,7 @@ export function ProductHero({ lang, product }: ProductHeroProps) {
     const isRtl = lang === "ar";
 
     return (
-        <section className="py-20 px-6 z-10 relative overflow-hidden">
+        <section className="pt-6 pb-16 md:py-20 px-6 z-10 relative overflow-hidden">
             <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
 
                 {/* Text Content */}

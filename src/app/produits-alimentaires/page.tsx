@@ -12,7 +12,19 @@ export default function ProduitsAlimentairesPage() {
         <main className="min-h-screen bg-cream selection:bg-sage/30 flex flex-col font-sans">
             <Navbar />
             
-            <div className="flex-grow pt-32 pb-24 px-6 relative z-10">
+            {/* Banner Section */}
+            <section className="relative w-full aspect-[16/9] sm:aspect-[21/9] md:h-[45vh] lg:h-[50vh] mt-16 sm:mt-20 overflow-hidden bg-beige/20 shadow-md">
+                <Image
+                    src="/images/banner-floral-waters.png"
+                    alt="Gamme d'eaux florales La Cerise Verte"
+                    fill
+                    priority
+                    sizes="100vw"
+                    className="object-cover object-center"
+                />
+            </section>
+
+            <div className="flex-grow pt-16 pb-24 px-6 relative z-10">
                 <div className="max-w-6xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -42,17 +54,6 @@ export default function ProduitsAlimentairesPage() {
                                         <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-sage/10 rounded-full blur-2xl group-hover:bg-sage/20 transition-colors duration-500"></div>
                                         
                                         <div className="relative aspect-square w-full mb-6 flex items-center justify-center p-4 bg-cream/50 rounded-xl overflow-hidden">
-                                            {product.flowerImage && (
-                                                <div className="absolute inset-2 -right-4 -top-4 opacity-70 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 pointer-events-none">
-                                                    <Image 
-                                                        src={product.flowerImage} 
-                                                        alt={`${product.content.fr.hero.title} botanical`}
-                                                        fill
-                                                        sizes="(max-width: 768px) 250px, 300px"
-                                                        className="object-contain p-2"
-                                                    />
-                                                </div>
-                                            )}
                                             <div className="relative w-full h-full z-10">
                                                 <Image 
                                                     src={product.image} 
