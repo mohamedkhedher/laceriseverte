@@ -54,12 +54,12 @@ export const products: ProductData[] = [
         variants: [
             {
                 volume: "250ml",
-                price: 14.950,
+                price: 15.000,
                 volumeLabel: { fr: "250 ml", en: "250 ml", ar: "250 مل" }
             },
             {
                 volume: "1.5L",
-                price: 49.500,
+                price: 48.000,
                 volumeLabel: { fr: "1.5 L", en: "1.5 L", ar: "1.5 لتر" }
             }
         ],
@@ -260,12 +260,12 @@ export const products: ProductData[] = [
         variants: [
             {
                 volume: "250ml",
-                price: 9.900,
+                price: 10.000,
                 volumeLabel: { fr: "250 ml", en: "250 ml", ar: "250 مل" }
             },
             {
                 volume: "1.5L",
-                price: 38.900,
+                price: 38.000,
                 volumeLabel: { fr: "1.5 L", en: "1.5 L", ar: "1.5 لتر" }
             }
         ],
@@ -468,6 +468,11 @@ export const products: ProductData[] = [
                 volume: "250ml",
                 price: 20.000,
                 volumeLabel: { fr: "250 ml", en: "250 ml", ar: "250 مل" }
+            },
+            {
+                volume: "1.5L",
+                price: 90.000,
+                volumeLabel: { fr: "1.5 L", en: "1.5 L", ar: "1.5 لتر" }
             }
         ],
         content: {
@@ -669,6 +674,11 @@ export const products: ProductData[] = [
                 volume: "250ml",
                 price: 30.000,
                 volumeLabel: { fr: "250 ml", en: "250 ml", ar: "250 مل" }
+            },
+            {
+                volume: "1.5L",
+                price: 110.000,
+                volumeLabel: { fr: "1.5 L", en: "1.5 L", ar: "1.5 لتر" }
             }
         ],
         content: {

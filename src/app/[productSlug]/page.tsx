@@ -88,20 +88,8 @@ function ProductPageContent() {
             <ProductSpecs lang={lang} product={product} />
             <ProductCTA lang={lang} product={product} />
             <Footer />
-
-            <CheckoutModal
-                isOpen={checkoutOpen}
-                onClose={() => setCheckoutOpen(false)}
-                lang={lang}
-            />
         </main>
     );
 }
 
-export default function ProductPage() {
-    return (
-        <CartProvider>
-            <ProductPageContent />
-        </CartProvider>
-    );
-}
+export default ProductPageContent;

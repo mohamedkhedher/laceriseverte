@@ -32,6 +32,9 @@ export const metadata: Metadata = {
   description: "La Cerise Verte — produits naturels, cosmétiques bio et eaux florales inspirés par la pureté botanique. Découvrez nos hydrolats d'exception.",
 };
 
+import { CartProvider } from "@/components/CartContext";
+import { GlobalModals } from "@/components/GlobalModals";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,7 +43,10 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${cinzelDecorative.variable} ${cinzel.variable} ${poppins.variable}`}>
       <body className="antialiased font-sans bg-cream text-olive selection:bg-sage/30">
-        {children}
+        <CartProvider>
+          {children}
+          <GlobalModals />
+        </CartProvider>
       </body>
     </html>
   );

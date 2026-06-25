@@ -14,14 +14,21 @@ interface CartContextType {
     items: CartItem[];
     addItem: (item: Omit<CartItem, "quantity">) => void;
     removeItem: (productSlug: string, volume: string) => void;
+    updateQuantity: (productSlug: string, volume: string, delta: number) => void;
     clearCart: () => void;
     total: number;
+    isCartOpen: boolean;
+    setIsCartOpen: (open: boolean) => void;
+    isCheckoutOpen: boolean;
+    setIsCheckoutOpen: (open: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([]);
+    const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
     const addItem = useCallback((newItem: Omit<CartItem, "quantity">) => {
         setItems((prev) => {
@@ -47,6 +54,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
         );
     }, []);
 
+    const updateQuantity = useCallback((productSlug: string, volume: string, delta: number) => {
+        setItems((prev) =>
+            prev
+                .map((item) => {
+                    if (item.productSlug === productSlug && item.volume === volume) {
+                        const newQty = item.quantity + delta;
+                        return newQty > 0 ? { ...item, quantity: newQty } : null;
+                    }
+                    return item;
+                })
+                .filter((item): item is CartItem => item !== null)
+        );
+    }, []);
+
     const clearCart = useCallback(() => {
         setItems([]);
     }, []);
@@ -57,8 +78,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
 
     const value = useMemo(
-        () => ({ items, addItem, removeItem, clearCart, total }),
-        [items, addItem, removeItem, clearCart, total]
+        () => ({
+            items,
+            addItem,
+            removeItem,
+            updateQuantity,
+            clearCart,
+            total,
+            isCartOpen,
+            setIsCartOpen,
+            isCheckoutOpen,
+            setIsCheckoutOpen,
+        }),
+        [
+            items,
+            addItem,
+            removeItem,
+            updateQuantity,
+            clearCart,
+            total,
+            isCartOpen,
+            setIsCartOpen,
+            isCheckoutOpen,
+            setIsCheckoutOpen,
+        ]
     );
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

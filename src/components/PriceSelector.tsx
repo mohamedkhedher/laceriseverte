@@ -14,17 +14,33 @@ interface PriceSelectorProps {
 }
 
 const orderLabels: Record<Language, string> = {
-    fr: "Commander",
-    en: "Order",
-    ar: "اطلب",
+    fr: "Achat direct",
+    en: "Buy now",
+    ar: "شراء مباشر",
+};
+
+const addToCartLabels: Record<Language, string> = {
+    fr: "Ajouter au panier",
+    en: "Add to cart",
+    ar: "أضف إلى السلة",
 };
 
 export function PriceSelector({ variants, lang, productSlug, productName, onOrder }: PriceSelectorProps) {
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const { addItem } = useCart();
+    const { addItem, setIsCartOpen, setIsCheckoutOpen } = useCart();
     const isRtl = lang === "ar";
     const selected = variants[selectedIndex];
     const showPills = variants.length > 1;
+
+    const handleAddToCart = () => {
+        addItem({
+            productSlug,
+            productName,
+            volume: selected.volume,
+            price: selected.price,
+        });
+        setIsCartOpen(true);
+    };
 
     const handleOrder = () => {
         addItem({
@@ -33,6 +49,7 @@ export function PriceSelector({ variants, lang, productSlug, productName, onOrde
             volume: selected.volume,
             price: selected.price,
         });
+        setIsCheckoutOpen(true);
         onOrder?.({
             volume: selected.volume,
             price: selected.price,
@@ -100,17 +117,29 @@ export function PriceSelector({ variants, lang, productSlug, productName, onOrde
                 </AnimatePresence>
             </div>
 
-            {/* Order button */}
-            <motion.button
-                onClick={handleOrder}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="relative inline-flex items-center justify-center px-10 py-4 bg-forest text-cream rounded-full font-medium tracking-wide text-base shadow-lg shadow-forest/20 hover:shadow-xl hover:shadow-forest/25 transition-shadow duration-300 overflow-hidden group"
-            >
-                {/* Subtle shimmer on hover */}
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-cream/8 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
-                <span className="relative z-10">{orderLabels[lang]}</span>
-            </motion.button>
+            {/* CTA buttons */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center mt-2">
+                {/* Add to cart */}
+                <motion.button
+                    onClick={handleAddToCart}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full sm:w-auto px-8 py-4 border-2 border-forest text-forest rounded-full font-medium tracking-wide text-base hover:bg-forest hover:text-cream transition-colors duration-300"
+                >
+                    {addToCartLabels[lang]}
+                </motion.button>
+
+                {/* Direct Order */}
+                <motion.button
+                    onClick={handleOrder}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="relative w-full sm:w-auto px-8 py-4 bg-forest text-cream rounded-full font-medium tracking-wide text-base shadow-lg shadow-forest/20 hover:shadow-xl hover:shadow-forest/25 transition-shadow duration-300 overflow-hidden group"
+                >
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-cream/8 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+                    <span className="relative z-10">{orderLabels[lang]}</span>
+                </motion.button>
+            </div>
         </div>
     );
 }

@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ShoppingBag } from 'lucide-react';
+import { useCart } from './CartContext';
 
 const navLinks = [
   { href: '/', label: 'Accueil' },
@@ -17,6 +18,8 @@ const navLinks = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { items, setIsCartOpen } = useCart();
+  const itemCount = items.reduce((s, i) => s + i.quantity, 0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,12 +85,35 @@ export function Navbar() {
           ))}
         </ul>
 
-        {/* Mobile Hamburger Button */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="relative z-50 flex h-10 w-10 items-center justify-center rounded-full text-forest transition-colors duration-300 hover:bg-sage/10 lg:hidden"
-          aria-label={mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
-        >
+        {/* Cart Icon Button (Desktop + Mobile) */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className="relative p-2.5 rounded-full text-forest hover:bg-sage/10 transition-colors flex items-center justify-center"
+            aria-label="Ouvrir le panier"
+          >
+            <ShoppingBag size={20} strokeWidth={1.5} />
+            <AnimatePresence>
+              {itemCount > 0 && (
+                <motion.span
+                  key={itemCount}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  className="absolute top-1 right-1 bg-sage text-forest text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm border border-cream"
+                >
+                  {itemCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+
+          {/* Mobile Hamburger Button */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="relative z-50 flex h-10 w-10 items-center justify-center rounded-full text-forest transition-colors duration-300 hover:bg-sage/10 lg:hidden"
+            aria-label={mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+          >
           <AnimatePresence mode="wait" initial={false}>
             {mobileOpen ? (
               <motion.div
@@ -112,6 +138,7 @@ export function Navbar() {
             )}
           </AnimatePresence>
         </button>
+        </div>
       </nav>
 
       {/* Mobile Menu Overlay */}
