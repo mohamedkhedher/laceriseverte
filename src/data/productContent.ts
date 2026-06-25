@@ -10,6 +10,7 @@ export interface ProductData {
     slug: string;
     image: string;
     bannerImage: string;
+    flowerImage: string;
     variants: ProductVariant[];
     content: {
         [key in Language]: {
@@ -47,8 +48,9 @@ export interface ProductData {
 export const products: ProductData[] = [
     {
         slug: "fo",
-        image: "/zhar.jpeg",
-        bannerImage: "/zhar.jpeg",
+        image: "/images/orange-blossom-product.png",
+        bannerImage: "/images/banner-floral-waters.png",
+        flowerImage: "/images/orange-blossom-flower.png",
         variants: [
             {
                 volume: "250ml",
@@ -252,8 +254,9 @@ export const products: ProductData[] = [
     },
     {
         slug: "eau_de_geranuim",
-        image: "/product.png",
-        bannerImage: "/product.png",
+        image: "/images/geranium-product.png",
+        bannerImage: "/images/banner-floral-waters.png",
+        flowerImage: "/images/geranium-flower.png",
         variants: [
             {
                 volume: "250ml",
@@ -457,8 +460,9 @@ export const products: ProductData[] = [
     },
     {
         slug: "eau-de-rose",
-        image: "/product.png",
-        bannerImage: "/product.png",
+        image: "/images/rose-product.png",
+        bannerImage: "/images/banner-floral-waters.png",
+        flowerImage: "/images/rose-flower.png",
         variants: [
             {
                 volume: "250ml",
@@ -657,8 +661,9 @@ export const products: ProductData[] = [
     },
     {
         slug: "eau_d'eglantier",
-        image: "/product.png",
-        bannerImage: "/product.png",
+        image: "/images/wild-rose-product.png",
+        bannerImage: "/images/banner-floral-waters.png",
+        flowerImage: "/images/wild-rose-flower.png",
         variants: [
             {
                 volume: "250ml",

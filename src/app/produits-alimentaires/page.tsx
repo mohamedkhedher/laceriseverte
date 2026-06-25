@@ -41,13 +41,27 @@ export default function ProduitsAlimentairesPage() {
                                         {/* Decorative background circle */}
                                         <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-sage/10 rounded-full blur-2xl group-hover:bg-sage/20 transition-colors duration-500"></div>
                                         
-                                        <div className="relative aspect-square w-full mb-6 flex items-center justify-center p-4 bg-cream/50 rounded-xl">
-                                            <Image 
-                                                src={product.image} 
-                                                alt={product.content.fr.hero.title}
-                                                fill
-                                                className="object-contain p-4 group-hover:scale-105 transition-transform duration-700 ease-out"
-                                            />
+                                        <div className="relative aspect-square w-full mb-6 flex items-center justify-center p-4 bg-cream/50 rounded-xl overflow-hidden">
+                                            {product.flowerImage && (
+                                                <div className="absolute inset-2 -right-4 -top-4 opacity-70 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 pointer-events-none">
+                                                    <Image 
+                                                        src={product.flowerImage} 
+                                                        alt={`${product.content.fr.hero.title} botanical`}
+                                                        fill
+                                                        sizes="(max-width: 768px) 250px, 300px"
+                                                        className="object-contain p-2"
+                                                    />
+                                                </div>
+                                            )}
+                                            <div className="relative w-full h-full z-10">
+                                                <Image 
+                                                    src={product.image} 
+                                                    alt={product.content.fr.hero.title}
+                                                    fill
+                                                    sizes="(max-width: 768px) 250px, 300px"
+                                                    className="object-contain p-4 group-hover:scale-105 transition-transform duration-700 ease-out drop-shadow-xl"
+                                                />
+                                            </div>
                                         </div>
                                         
                                         <div className="mt-auto flex flex-col items-center text-center">

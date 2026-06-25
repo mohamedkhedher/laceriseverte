@@ -75,7 +75,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="tel:+33000000000"
+                  href="tel:+21625544444"
                   className="group flex items-center gap-3 font-sans text-sm text-cream/60 transition-colors duration-300 hover:text-cream"
                 >
                   <Phone
@@ -83,7 +83,7 @@ export function Footer() {
                     strokeWidth={1.5}
                     className="shrink-0 text-sage/70 transition-colors duration-300 group-hover:text-sage"
                   />
-                  +33 (0) 00 00 00 00
+                  +216 25 544 444
                 </a>
               </li>
             </ul>
@@ -96,7 +96,7 @@ export function Footer() {
             </h3>
             <div className="mt-5 flex gap-3">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/la_cerise_verte_/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -120,7 +120,7 @@ export function Footer() {
                 </svg>
               </a>
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/profile.php?id=61573303113162"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
