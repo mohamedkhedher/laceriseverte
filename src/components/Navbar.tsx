@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ShoppingBag } from 'lucide-react';
+import { Menu, X, ShoppingBag, Globe } from 'lucide-react';
 import { useCart } from './CartContext';
+import type { Language } from '@/data/productContent';
 
 const navLinks = [
   { href: '/', label: 'Accueil' },
@@ -18,8 +19,15 @@ const navLinks = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { items, setIsCartOpen } = useCart();
+  const { items, setIsCartOpen, lang, setLang } = useCart();
   const itemCount = items.reduce((s, i) => s + i.quantity, 0);
+
+  const langs: Language[] = ['fr', 'en', 'ar'];
+  const nextLang = () => {
+    const currentIndex = langs.indexOf(lang);
+    const nextIndex = (currentIndex + 1) % langs.length;
+    setLang(langs[nextIndex]);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,8 +93,19 @@ export function Navbar() {
           ))}
         </ul>
 
-        {/* Cart Icon Button (Desktop + Mobile) */}
+        {/* Right CTA Area */}
         <div className="flex items-center gap-2">
+          {/* Web Language Switch Icon */}
+          <button
+            onClick={nextLang}
+            className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cream/80 backdrop-blur-md border border-forest/15 text-forest hover:bg-forest hover:text-cream transition-all duration-300 text-xs font-semibold shadow-sm mr-1"
+            title="Changer de langue"
+          >
+            <Globe size={15} />
+            <span>{lang === 'ar' ? 'عربي' : lang.toUpperCase()}</span>
+          </button>
+
+          {/* Cart Icon Button (Desktop + Mobile) */}
           <button
             onClick={() => setIsCartOpen(true)}
             className="relative p-2.5 rounded-full text-forest hover:bg-sage/10 transition-colors flex items-center justify-center"
@@ -198,6 +217,34 @@ export function Navbar() {
                   </motion.li>
                 ))}
               </motion.ul>
+
+              {/* Mobile Translation Switcher */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 15 }}
+                transition={{ duration: 0.35, delay: 0.25 }}
+                className="mt-8 flex items-center gap-1.5 bg-beige/60 backdrop-blur-md rounded-full p-1 border border-forest/15 shadow-sm"
+              >
+                {[
+                  { code: 'fr', label: 'FR' },
+                  { code: 'en', label: 'EN' },
+                  { code: 'ar', label: 'عربي' },
+                ].map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => {
+                      setLang(l.code as Language);
+                      setMobileOpen(false);
+                    }}
+                    className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
+                      lang === l.code ? 'bg-forest text-cream shadow-md' : 'text-olive/80 hover:text-forest'
+                    }`}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </motion.div>
 
               {/* Decorative botanical separator */}
               <motion.div

@@ -2,23 +2,21 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { Language, getProductBySlug } from "@/data/productContent";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { getProductBySlug } from "@/data/productContent";
 import { ProductHero } from "@/components/ProductHero";
 import { BenefitsGrid } from "@/components/BenefitsGrid";
 import { ProcessHighlight } from "@/components/ProcessHighlight";
 import { ProductSpecs } from "@/components/ProductSpecs";
 import { ProductCTA } from "@/components/ProductCTA";
 import { PriceSelector } from "@/components/PriceSelector";
-import { CheckoutModal } from "@/components/CheckoutModal";
-import { CartProvider } from "@/components/CartContext";
+import { useCart } from "@/components/CartContext";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
 function ProductPageContent() {
     const params = useParams();
     const slug = decodeURIComponent(params.productSlug as string);
-    const [lang, setLang] = useState<Language>("fr");
+    const { lang } = useCart();
     const [checkoutOpen, setCheckoutOpen] = useState(false);
 
     const product = getProductBySlug(slug);
@@ -48,11 +46,9 @@ function ProductPageContent() {
         <main className={`min-h-screen bg-cream selection:bg-sage/30 ${lang === "ar" ? "font-subtitle" : "font-sans"}`}>
             <Navbar />
             
-            <div className="pt-24 md:pt-28 px-6 max-w-6xl mx-auto flex justify-center sm:justify-end relative z-20">
-                <LanguageSwitcher currentLang={lang} onLanguageChange={setLang} />
+            <div className="pt-24 md:pt-28">
+                <ProductHero lang={lang} product={product} />
             </div>
-
-            <ProductHero lang={lang} product={product} />
 
             {/* Price & Order Section */}
             <section className="py-16 px-6 bg-beige/30 relative z-10" dir={lang === "ar" ? "rtl" : "ltr"}>

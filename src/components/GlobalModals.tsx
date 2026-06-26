@@ -5,7 +5,7 @@ import { CheckoutModal } from "./CheckoutModal";
 import { useCart } from "./CartContext";
 
 export function GlobalModals() {
-    const { isCheckoutOpen, setIsCheckoutOpen } = useCart();
+    const { isCheckoutOpen, setIsCheckoutOpen, lang } = useCart();
 
     return (
         <>
@@ -13,7 +13,7 @@ export function GlobalModals() {
             <CheckoutModal
                 isOpen={isCheckoutOpen}
                 onClose={() => setIsCheckoutOpen(false)}
-                lang="fr"
+                lang={lang}
             />
         </>
     );

@@ -13,7 +13,7 @@ export default function ProduitsAlimentairesPage() {
             <Navbar />
             
             {/* Banner Section */}
-            <section className="relative w-full aspect-[16/9] sm:aspect-[21/9] md:h-[45vh] lg:h-[50vh] mt-16 sm:mt-20 overflow-hidden bg-beige/20 shadow-md">
+            <section className="relative w-full aspect-[16/9] sm:aspect-[21/9] md:h-[45vh] lg:h-[50vh] mt-16 sm:mt-20 overflow-hidden bg-beige/20">
                 <Image
                     src="/images/banner-floral-waters.png"
                     alt="Gamme d'eaux florales La Cerise Verte"
@@ -22,6 +22,8 @@ export default function ProduitsAlimentairesPage() {
                     sizes="100vw"
                     className="object-cover object-center"
                 />
+                {/* Gradient blending overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/40 to-transparent pointer-events-none" />
             </section>
 
             <div className="flex-grow pt-16 pb-24 px-6 relative z-10">

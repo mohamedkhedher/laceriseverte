@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from "react";
+import type { Language } from "@/data/productContent";
 
 export interface CartItem {
     productSlug: string;
@@ -21,6 +22,8 @@ interface CartContextType {
     setIsCartOpen: (open: boolean) => void;
     isCheckoutOpen: boolean;
     setIsCheckoutOpen: (open: boolean) => void;
+    lang: Language;
+    setLang: (lang: Language) => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -29,6 +32,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+    const [lang, setLang] = useState<Language>("fr");
 
     const addItem = useCallback((newItem: Omit<CartItem, "quantity">) => {
         setItems((prev) => {
@@ -89,6 +93,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
             setIsCartOpen,
             isCheckoutOpen,
             setIsCheckoutOpen,
+            lang,
+            setLang,
         }),
         [
             items,
@@ -101,6 +107,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             setIsCartOpen,
             isCheckoutOpen,
             setIsCheckoutOpen,
+            lang,
         ]
     );
 

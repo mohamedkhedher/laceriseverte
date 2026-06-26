@@ -1,7 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Language, ProductData } from "@/data/productContent";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
 interface ProductHeroProps {
@@ -12,10 +14,26 @@ interface ProductHeroProps {
 export function ProductHero({ lang, product }: ProductHeroProps) {
     const content = product.content[lang].hero;
     const isRtl = lang === "ar";
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    const slides = product.flowerImage
+        ? [
+              { src: product.image, label: lang === "ar" ? "المنتج" : lang === "en" ? "Product" : "Produit" },
+              { src: product.flowerImage, label: lang === "ar" ? "النبتة" : lang === "en" ? "Botanical" : "Fleur" },
+          ]
+        : [{ src: product.image, label: lang === "ar" ? "المنتج" : lang === "en" ? "Product" : "Produit" }];
+
+    const handlePrev = () => {
+        setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+    };
+
+    const handleNext = () => {
+        setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+    };
 
     return (
         <section className="pt-6 pb-16 md:py-20 px-6 z-10 relative overflow-hidden">
-            <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+            <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
                 {/* Text Content */}
                 <motion.div
@@ -42,57 +60,75 @@ export function ProductHero({ lang, product }: ProductHeroProps) {
                     </p>
                 </motion.div>
 
-                {/* Visual Content - Botanical Composition (Bottle + Flower) */}
-                <div className="order-1 lg:order-2 relative aspect-square w-full max-w-md mx-auto flex items-center justify-center p-4">
+                {/* Visual Content - Interactive Product Slider (Bigger) */}
+                <div className="order-1 lg:order-2 relative aspect-square w-full max-w-lg md:max-w-xl mx-auto flex flex-col items-center justify-center p-2">
                     {/* Decorative glowing background aura */}
-                    <div className="absolute inset-8 rounded-full bg-gradient-to-tr from-sage/20 via-beige/40 to-cream blur-3xl -z-10" />
+                    <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-sage/25 via-beige/40 to-cream blur-3xl -z-10" />
 
-                    {/* Flower / Plant Image (Background Floating Element) */}
-                    {product.flowerImage && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.8, x: isRtl ? -40 : 40, rotate: -5 }}
-                            animate={{ 
-                                opacity: 0.9, 
-                                scale: 1, 
-                                x: isRtl ? -20 : 20, 
-                                y: [0, -12, 0],
-                                rotate: [-5, 0, -5]
-                            }}
-                            transition={{ 
-                                opacity: { duration: 1, delay: 0.1 },
-                                scale: { duration: 1, delay: 0.1 },
-                                x: { duration: 1, delay: 0.1 },
-                                y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-                                rotate: { duration: 7, repeat: Infinity, ease: "easeInOut" }
-                            }}
-                            className="absolute w-[80%] h-[80%] -right-4 -top-4 md:-right-8 md:-top-8 -z-5 pointer-events-none select-none"
-                        >
-                            <Image
-                                src={product.flowerImage}
-                                alt={`${content.title} botanical ingredient`}
-                                fill
-                                sizes="(max-width: 768px) 300px, 400px"
-                                className="object-contain drop-shadow-lg opacity-85"
-                            />
-                        </motion.div>
+                    {/* Main Image Slider Area */}
+                    <div className="relative w-full h-[380px] sm:h-[480px] md:h-[580px] flex items-center justify-center">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={currentSlide}
+                                initial={{ opacity: 0, scale: 0.92, x: isRtl ? -20 : 20 }}
+                                animate={{ opacity: 1, scale: 1, x: 0 }}
+                                exit={{ opacity: 0, scale: 0.92, x: isRtl ? 20 : -20 }}
+                                transition={{ duration: 0.35, ease: "easeOut" }}
+                                className="relative w-[90%] h-[95%] z-10"
+                            >
+                                <Image
+                                    src={slides[currentSlide].src}
+                                    alt={content.title}
+                                    fill
+                                    sizes="(max-width: 768px) 400px, 600px"
+                                    className="object-contain drop-shadow-2xl"
+                                    priority
+                                />
+                            </motion.div>
+                        </AnimatePresence>
+
+                        {/* Navigation Arrows */}
+                        {slides.length > 1 && (
+                            <>
+                                <button
+                                    onClick={handlePrev}
+                                    className="absolute left-1 sm:left-4 z-20 p-2.5 sm:p-3 rounded-full bg-cream/80 backdrop-blur-md text-forest shadow-lg border border-forest/10 hover:bg-forest hover:text-cream transition-all duration-200"
+                                    aria-label="Image précédente"
+                                >
+                                    <ChevronLeft size={22} />
+                                </button>
+                                <button
+                                    onClick={handleNext}
+                                    className="absolute right-1 sm:right-4 z-20 p-2.5 sm:p-3 rounded-full bg-cream/80 backdrop-blur-md text-forest shadow-lg border border-forest/10 hover:bg-forest hover:text-cream transition-all duration-200"
+                                    aria-label="Image suivante"
+                                >
+                                    <ChevronRight size={22} />
+                                </button>
+                            </>
+                        )}
+                    </div>
+
+                    {/* Switch Pills / Thumbnails */}
+                    {slides.length > 1 && (
+                        <div className="flex items-center gap-2 mt-4 z-20 bg-cream/70 backdrop-blur-md p-1.5 rounded-full border border-forest/15 shadow-sm">
+                            {slides.map((slide, idx) => {
+                                const isActive = currentSlide === idx;
+                                return (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setCurrentSlide(idx)}
+                                        className={`px-5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 ${
+                                            isActive
+                                                ? "bg-forest text-cream shadow-sm"
+                                                : "text-olive/70 hover:text-forest"
+                                        }`}
+                                    >
+                                        {slide.label}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     )}
-
-                    {/* Product Bottle Image (Foreground Prominent Element) */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.92, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        transition={{ duration: 0.9, delay: 0.25, type: "spring", bounce: 0.2 }}
-                        className="relative w-[75%] h-[90%] z-10"
-                    >
-                        <Image
-                            src={product.image}
-                            alt={content.title}
-                            fill
-                            sizes="(max-width: 768px) 350px, 450px"
-                            className="object-contain drop-shadow-2xl"
-                            priority
-                        />
-                    </motion.div>
                 </div>
 
             </div>
