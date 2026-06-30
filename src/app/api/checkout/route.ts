@@ -10,12 +10,14 @@ interface OrderItem {
 
 interface OrderData {
     customer: {
-        name: string;
+        name?: string;
+        fullName?: string;
         phone: string;
         address: string;
         city: string;
         postalCode?: string;
         notes?: string;
+        deliveryNotes?: string;
     };
     items: OrderItem[];
     total: number;
@@ -25,8 +27,11 @@ export async function POST(request: NextRequest) {
     try {
         const body: OrderData = await request.json();
 
+        const customerName = body.customer?.name || body.customer?.fullName;
+        const customerNotes = body.customer?.notes || body.customer?.deliveryNotes;
+
         // Validate required fields
-        if (!body.customer?.name || !body.customer?.phone || !body.customer?.address || !body.customer?.city) {
+        if (!customerName || !body.customer?.phone || !body.customer?.address || !body.customer?.city) {
             return NextResponse.json(
                 { error: "Veuillez remplir tous les champs obligatoires." },
                 { status: 400 }
@@ -86,12 +91,12 @@ export async function POST(request: NextRequest) {
                 <div class="content">
                     <h2 class="section-title">📦 Informations client</h2>
                     <div style="margin-bottom: 20px;">
-                        <div class="info-row"><span class="info-label">Nom :</span><span class="info-value">${body.customer.name}</span></div>
+                        <div class="info-row"><span class="info-label">Nom :</span><span class="info-value">${customerName}</span></div>
                         <div class="info-row"><span class="info-label">Téléphone :</span><span class="info-value">${body.customer.phone}</span></div>
                         <div class="info-row"><span class="info-label">Adresse :</span><span class="info-value">${body.customer.address}</span></div>
                         <div class="info-row"><span class="info-label">Ville :</span><span class="info-value">${body.customer.city}</span></div>
                         ${body.customer.postalCode ? `<div class="info-row"><span class="info-label">Code postal :</span><span class="info-value">${body.customer.postalCode}</span></div>` : ""}
-                        ${body.customer.notes ? `<div class="info-row"><span class="info-label">Notes :</span><span class="info-value">${body.customer.notes}</span></div>` : ""}
+                        ${customerNotes ? `<div class="info-row"><span class="info-label">Notes :</span><span class="info-value">${customerNotes}</span></div>` : ""}
                     </div>
 
                     <h2 class="section-title">🛒 Détails de la commande</h2>
@@ -123,35 +128,39 @@ export async function POST(request: NextRequest) {
         </html>
         `;
 
-        // Send email
+        // Target email address
         const orderEmail = process.env.ORDER_EMAIL || "contact@laceriseverte.com";
 
-        // Create transporter — configure via environment variables
-        const transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST || "smtp.gmail.com",
-            port: parseInt(process.env.SMTP_PORT || "587"),
-            secure: process.env.SMTP_SECURE === "true",
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-            },
-        });
-
-        // Only send email if SMTP credentials are configured
+        // Only attempt sending if SMTP credentials exist
         if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-            await transporter.sendMail({
-                from: `"La Cerise Verte" <${process.env.SMTP_USER}>`,
-                to: orderEmail,
-                subject: `🌿 Nouvelle commande — ${body.customer.name} — ${body.total.toFixed(3)} TND`,
-                html: emailHtml,
-            });
+            try {
+                const transporter = nodemailer.createTransport({
+                    host: process.env.SMTP_HOST || "smtp.gmail.com",
+                    port: parseInt(process.env.SMTP_PORT || "587"),
+                    secure: process.env.SMTP_SECURE === "true" || process.env.SMTP_PORT === "465",
+                    auth: {
+                        user: process.env.SMTP_USER,
+                        pass: process.env.SMTP_PASS,
+                    },
+                });
+
+                await transporter.sendMail({
+                    from: `"La Cerise Verte Commandes" <${process.env.SMTP_USER}>`,
+                    to: orderEmail,
+                    subject: `🌿 Nouvelle commande — ${customerName} — ${body.total.toFixed(3)} TND`,
+                    html: emailHtml,
+                });
+            } catch (smtpError) {
+                console.error("Erreur SMTP lors de l'envoi de l'email :", smtpError);
+                // We still let the order succeed or log it so the user knows
+            }
         } else {
-            // Log order to console when SMTP is not configured (development)
-            console.log("=== NEW ORDER (SMTP not configured) ===");
-            console.log("Customer:", body.customer);
-            console.log("Items:", body.items);
-            console.log("Total:", body.total.toFixed(3), "TND");
-            console.log("========================================");
+            console.log("=== NOUVELLE COMMANDE (SMTP non configuré dans .env) ===");
+            console.log("Email cible :", orderEmail);
+            console.log("Client :", { name: customerName, phone: body.customer.phone, address: body.customer.address, city: body.customer.city, notes: customerNotes });
+            console.log("Articles :", body.items);
+            console.log("Total :", body.total.toFixed(3), "TND");
+            console.log("========================================================");
         }
 
         return NextResponse.json({

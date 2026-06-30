@@ -132,7 +132,11 @@ export function CheckoutModal({ isOpen, onClose, lang }: CheckoutModalProps) {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    customer: form,
+                    customer: {
+                        ...form,
+                        name: form.fullName,
+                        notes: form.deliveryNotes,
+                    },
                     items,
                     total,
                     lang,
