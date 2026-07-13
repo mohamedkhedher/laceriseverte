@@ -132,12 +132,27 @@ export async function POST(request: NextRequest) {
         const orderEmail = process.env.ORDER_EMAIL || "contact@laceriseverte.com";
 
         // Only attempt sending if SMTP credentials exist
-        if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+        if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+            console.log("=== NOUVELLE COMMANDE (SMTP non configuré dans .env ou Vercel) ===");
+            console.log("Email cible :", orderEmail);
+            console.log("Client :", { name: customerName, phone: body.customer.phone, address: body.customer.address, city: body.customer.city, notes: customerNotes });
+            console.log("Articles :", body.items);
+            console.log("Total :", body.total.toFixed(3), "TND");
+            console.log("=================================================================");
+
+            if (process.env.NODE_ENV === "production") {
+                return NextResponse.json(
+                    { error: `Erreur de configuration : Le serveur n'a pas les variables SMTP_USER et SMTP_PASS définies (dans Vercel > Environment Variables). Impossible d'envoyer l'email vers ${orderEmail}.` },
+                    { status: 500 }
+                );
+            }
+        } else {
             try {
+                const port = parseInt(process.env.SMTP_PORT || "465");
                 const transporter = nodemailer.createTransport({
                     host: process.env.SMTP_HOST || "smtp.gmail.com",
-                    port: parseInt(process.env.SMTP_PORT || "587"),
-                    secure: process.env.SMTP_SECURE === "true" || process.env.SMTP_PORT === "465",
+                    port: port,
+                    secure: process.env.SMTP_SECURE === "true" || port === 465,
                     auth: {
                         user: process.env.SMTP_USER,
                         pass: process.env.SMTP_PASS,
@@ -150,17 +165,14 @@ export async function POST(request: NextRequest) {
                     subject: `🌿 Nouvelle commande — ${customerName} — ${body.total.toFixed(3)} TND`,
                     html: emailHtml,
                 });
-            } catch (smtpError) {
+                console.log(`=== EMAIL DE COMMANDE ENVOYÉ AVEC SUCCÈS À ${orderEmail} ===`);
+            } catch (smtpError: any) {
                 console.error("Erreur SMTP lors de l'envoi de l'email :", smtpError);
-                // We still let the order succeed or log it so the user knows
+                return NextResponse.json(
+                    { error: `Échec de l'envoi de l'email à ${orderEmail} : ${smtpError?.message || "Erreur de connexion SMTP"}. Vérifiez vos identifiants/paramètres SMTP sur Vercel.` },
+                    { status: 500 }
+                );
             }
-        } else {
-            console.log("=== NOUVELLE COMMANDE (SMTP non configuré dans .env) ===");
-            console.log("Email cible :", orderEmail);
-            console.log("Client :", { name: customerName, phone: body.customer.phone, address: body.customer.address, city: body.customer.city, notes: customerNotes });
-            console.log("Articles :", body.items);
-            console.log("Total :", body.total.toFixed(3), "TND");
-            console.log("========================================================");
         }
 
         return NextResponse.json({
