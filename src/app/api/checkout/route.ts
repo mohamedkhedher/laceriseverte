@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 interface OrderItem {
     productName: string;
@@ -128,48 +128,48 @@ export async function POST(request: NextRequest) {
         </html>
         `;
 
-        // Target email address
+        // Target email address and Resend configuration
         const orderEmail = process.env.ORDER_EMAIL || "contact@laceriseverte.com";
+        const resendApiKey = process.env.RESEND_API_KEY || "re_Ak9YWbWZ_91bwaQ2h71AvXnBNT5M4c9Ky";
+        const fromEmail = process.env.RESEND_FROM_EMAIL || "La Cerise Verte <onboarding@resend.dev>";
 
-        // Only attempt sending if SMTP credentials exist
-        if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-            console.log("=== NOUVELLE COMMANDE (SMTP non configuré dans .env ou Vercel) ===");
+        if (!resendApiKey) {
+            console.log("=== NOUVELLE COMMANDE (Clé Resend non configurée) ===");
             console.log("Email cible :", orderEmail);
             console.log("Client :", { name: customerName, phone: body.customer.phone, address: body.customer.address, city: body.customer.city, notes: customerNotes });
             console.log("Articles :", body.items);
             console.log("Total :", body.total.toFixed(3), "TND");
-            console.log("=================================================================");
+            console.log("=====================================================");
 
             if (process.env.NODE_ENV === "production") {
                 return NextResponse.json(
-                    { error: `Erreur de configuration : Le serveur n'a pas les variables SMTP_USER et SMTP_PASS définies (dans Vercel > Environment Variables). Impossible d'envoyer l'email vers ${orderEmail}.` },
+                    { error: `Erreur de configuration : Clé API Resend (RESEND_API_KEY) manquante sur Vercel.` },
                     { status: 500 }
                 );
             }
         } else {
             try {
-                const port = parseInt(process.env.SMTP_PORT || "465");
-                const transporter = nodemailer.createTransport({
-                    host: process.env.SMTP_HOST || "smtp.gmail.com",
-                    port: port,
-                    secure: process.env.SMTP_SECURE === "true" || port === 465,
-                    auth: {
-                        user: process.env.SMTP_USER,
-                        pass: process.env.SMTP_PASS,
-                    },
-                });
-
-                await transporter.sendMail({
-                    from: `"La Cerise Verte Commandes" <${process.env.SMTP_USER}>`,
-                    to: orderEmail,
+                const resend = new Resend(resendApiKey);
+                const { data, error } = await resend.emails.send({
+                    from: fromEmail,
+                    to: [orderEmail],
                     subject: `🌿 Nouvelle commande — ${customerName} — ${body.total.toFixed(3)} TND`,
                     html: emailHtml,
                 });
-                console.log(`=== EMAIL DE COMMANDE ENVOYÉ AVEC SUCCÈS À ${orderEmail} ===`);
-            } catch (smtpError: any) {
-                console.error("Erreur SMTP lors de l'envoi de l'email :", smtpError);
+
+                if (error) {
+                    console.error("Erreur Resend lors de l'envoi de l'email :", error);
+                    return NextResponse.json(
+                        { error: `Échec de l'envoi de l'email via Resend vers ${orderEmail} : ${error.message}. Note : Si vous utilisez 'onboarding@resend.dev' avec le mode test, Resend n'autorise l'envoi qu'à l'adresse email d'inscription de votre compte Resend. Vérifiez votre domaine sur resend.com pour envoyer à n'importe quelle adresse.` },
+                        { status: 500 }
+                    );
+                }
+
+                console.log(`=== EMAIL DE COMMANDE ENVOYÉ AVEC SUCCÈS VIA RESEND À ${orderEmail} (ID: ${data?.id}) ===`);
+            } catch (resendError: any) {
+                console.error("Erreur d'exécution Resend :", resendError);
                 return NextResponse.json(
-                    { error: `Échec de l'envoi de l'email à ${orderEmail} : ${smtpError?.message || "Erreur de connexion SMTP"}. Vérifiez vos identifiants/paramètres SMTP sur Vercel.` },
+                    { error: `Erreur lors de l'appel à l'API Resend : ${resendError?.message || "Erreur inconnue"}.` },
                     { status: 500 }
                 );
             }
